@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+.angular/
+dist/
+
+# Java & Maven
+target/
+*.class
+*.jar
+*.war
+.tools/
+backend/.tools/
+
+# Flutter & Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+mobile-app/build/
+mobile-app/.dart_tool/
+
+# IDE & OS
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
