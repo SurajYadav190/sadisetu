@@ -1,12 +1,11 @@
-# Stage 1: Build using Maven and Java 21
+# Stage 1: Build Java 21 Spring Boot Backend
 FROM maven:3.9-eclipse-temurin-21-alpine AS build
 WORKDIR /app
-COPY pom.xml .
-RUN mvn dependency:go-offline -B
+COPY pom.xml ./pom.xml
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Stage 2: Lightweight Java 21 Runtime
+# Stage 2: Run Lightweight JRE 21 Container
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
