@@ -7,7 +7,7 @@ class ApiService {
   static final ApiService instance = ApiService._internal();
   ApiService._internal();
 
-  String baseUrl = 'http://localhost:8080/api';
+  String baseUrl = 'https://sadisetu.onrender.com/api';
   String? authToken;
   UserModel? currentUser;
 
@@ -381,6 +381,7 @@ class ApiService {
   ];
 
   static final List<String> _candidateHosts = [
+    'https://sadisetu.onrender.com/api',
     'http://localhost:8080/api',
     'http://127.0.0.1:8080/api',
     'http://192.168.1.6:8080/api',
