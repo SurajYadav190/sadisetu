@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../config/theme.dart';
-import 'vendor_dashboard_screen.dart';
-import 'vendor_orders_screen.dart';
+import '../../services/api_service.dart';
+import '../common/auth_screen.dart';
 import 'vendor_calendar_screen.dart';
 import 'vendor_catalog_screen.dart';
+import 'vendor_dashboard_screen.dart';
 import 'vendor_earnings_screen.dart';
+import 'vendor_orders_screen.dart';
 
 class VendorMainNav extends StatefulWidget {
   const VendorMainNav({super.key});
@@ -25,7 +27,29 @@ class _VendorMainNavState extends State<VendorMainNav> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    if (!ApiService.instance.isVendorLoggedIn) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const AuthScreen(role: 'VENDOR')),
+        );
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (!ApiService.instance.isVendorLoggedIn) {
+      return const Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: CircularProgressIndicator(color: Color(0xFFB45309)),
+        ),
+      );
+    }
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,

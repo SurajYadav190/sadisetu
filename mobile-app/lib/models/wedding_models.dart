@@ -22,6 +22,14 @@ class UserModel {
       role: json['role'] ?? 'ROLE_CUSTOMER',
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'fullName': fullName,
+    'phone': phone,
+    'email': email,
+    'role': role,
+  };
 }
 
 class CategoryModel {
@@ -135,6 +143,52 @@ class VendorModel {
   }
 }
 
+class ServiceVarietyOption {
+  final String id;
+  final String name;
+  final String description;
+  final double price;
+  final int durationHours; // added time in hours
+  final String categorySlug;
+  final String badge;
+  final String icon;
+
+  const ServiceVarietyOption({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.price,
+    required this.durationHours,
+    required this.categorySlug,
+    this.badge = '',
+    this.icon = 'camera',
+  });
+
+  factory ServiceVarietyOption.fromJson(Map<String, dynamic> json) {
+    return ServiceVarietyOption(
+      id: json['id']?.toString() ?? '',
+      name: json['name'] ?? '',
+      description: json['description'] ?? '',
+      price: (json['price'] ?? 0).toDouble(),
+      durationHours: json['durationHours'] ?? 0,
+      categorySlug: json['categorySlug'] ?? '',
+      badge: json['badge'] ?? '',
+      icon: json['icon'] ?? 'camera',
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'description': description,
+    'price': price,
+    'durationHours': durationHours,
+    'categorySlug': categorySlug,
+    'badge': badge,
+    'icon': icon,
+  };
+}
+
 class BookingModel {
   final int id;
   final String bookingNumber;
@@ -146,7 +200,10 @@ class BookingModel {
   final String venueAddress;
   String status; // PENDING, ACCEPTED, IN_PROGRESS, COMPLETED, CANCELLED
   final double totalAmount;
-  final String paymentStatus; // ESCROW_HELD, RELEASED, REFUNDED
+  String paymentStatus; // ESCROW_HELD, RELEASED, REFUNDED
+  String? paymentTransactionId;
+  final List<String> selectedVarieties;
+  final int totalDurationHours;
 
   BookingModel({
     required this.id,
@@ -160,23 +217,57 @@ class BookingModel {
     required this.status,
     required this.totalAmount,
     required this.paymentStatus,
+    this.paymentTransactionId,
+    this.selectedVarieties = const [],
+    this.totalDurationHours = 8,
   });
 
   factory BookingModel.fromJson(Map<String, dynamic> json) {
+    List<String> varieties = [];
+    if (json['selectedVarieties'] is List) {
+      varieties = (json['selectedVarieties'] as List).map((e) => e.toString()).toList();
+    } else if (json['selectedVarieties'] is String && (json['selectedVarieties'] as String).isNotEmpty) {
+      varieties = (json['selectedVarieties'] as String)
+          .split(';')
+          .map((s) => s.trim())
+          .where((s) => s.isNotEmpty)
+          .toList();
+    }
+
     return BookingModel(
       id: json['id'] ?? 0,
       bookingNumber: json['bookingNumber'] ?? '',
-      customerName: json['customer']?['fullName'] ?? 'Client',
-      vendorName: json['vendor']?['businessName'] ?? 'Vendor',
-      categoryName: json['vendor']?['category']?['name'] ?? 'Wedding',
+      customerName: json['customer']?['fullName'] ?? (json['customerName'] ?? 'Client'),
+      vendorName: json['vendor']?['businessName'] ?? (json['vendorName'] ?? 'Vendor'),
+      categoryName: json['vendor']?['category']?['name'] ?? (json['categoryName'] ?? 'Wedding'),
       bookingDate: json['bookingDate'] ?? '',
       timeSlot: json['timeSlot'] ?? 'Full Day',
       venueAddress: json['venueAddress'] ?? '',
       status: json['status'] ?? 'PENDING',
       totalAmount: (json['totalAmount'] ?? 0).toDouble(),
       paymentStatus: json['paymentStatus'] ?? 'ESCROW_HELD',
+      paymentTransactionId: json['paymentTransactionId'],
+      selectedVarieties: varieties,
+      totalDurationHours: json['durationHours'] ?? (json['totalDurationHours'] ?? 8),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'bookingNumber': bookingNumber,
+    'customerName': customerName,
+    'vendorName': vendorName,
+    'categoryName': categoryName,
+    'bookingDate': bookingDate,
+    'timeSlot': timeSlot,
+    'venueAddress': venueAddress,
+    'status': status,
+    'totalAmount': totalAmount,
+    'paymentStatus': paymentStatus,
+    'paymentTransactionId': paymentTransactionId,
+    'selectedVarieties': selectedVarieties,
+    'totalDurationHours': totalDurationHours,
+  };
 }
 
 class ChatMessageModel {

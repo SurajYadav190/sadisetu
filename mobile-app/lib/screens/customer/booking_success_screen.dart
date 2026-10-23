@@ -58,12 +58,43 @@ class BookingSuccessScreen extends StatelessWidget {
                       border: Border.all(color: const Color(0xFFE2E8F0)),
                     ),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildRow('Vendor Service', booking.vendorName),
                         const Divider(height: 16),
+                        _buildRow('Category', booking.categoryName),
+                        const Divider(height: 16),
                         _buildRow('Event Date', booking.bookingDate),
                         const Divider(height: 16),
+                        _buildRow('Total Service Time', '${booking.totalDurationHours} Hours Coverage'),
+                        const Divider(height: 16),
                         _buildRow('Time Shift', booking.timeSlot),
+                        if (booking.selectedVarieties.isNotEmpty) ...[
+                          const Divider(height: 16),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Selected Varieties', style: TextStyle(fontSize: 13, color: AppTheme.slateMuted)),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: booking.selectedVarieties
+                                      .map((v) => Padding(
+                                            padding: const EdgeInsets.only(bottom: 3.0),
+                                            child: Text(
+                                              '✓ $v',
+                                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppTheme.primaryCrimson),
+                                              textAlign: TextAlign.right,
+                                            ),
+                                          ))
+                                      .toList(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                         const Divider(height: 16),
                         _buildRow('Total Escrow Held', '₹${booking.totalAmount.toInt()}'),
                       ],

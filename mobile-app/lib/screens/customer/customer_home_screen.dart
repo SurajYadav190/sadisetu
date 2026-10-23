@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../config/theme.dart';
 import '../../services/api_service.dart';
+import '../common/auth_screen.dart';
+import '../common/role_selector_screen.dart';
 import 'service_listing_screen.dart';
 import 'vendor_detail_screen.dart';
 
@@ -14,6 +16,83 @@ class CustomerHomeScreen extends StatefulWidget {
 class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   final ApiService _api = ApiService.instance;
   String _selectedCity = 'Delhi NCR';
+
+  void _showAccountDialog() {
+    final user = _api.currentUser;
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(
+                color: AppTheme.lightGold,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.person, color: AppTheme.primaryCrimson, size: 24),
+            ),
+            const SizedBox(width: 12),
+            const Text('Account Session', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              user?.fullName ?? 'Rahul Sharma',
+              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16, color: AppTheme.slateDark),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '+91 ${user?.phone ?? '9876543210'} • Verified Customer',
+              style: const TextStyle(color: AppTheme.slateMuted, fontSize: 13),
+            ),
+            const SizedBox(height: 18),
+            const Divider(),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.login_rounded, size: 16),
+                label: const Text('Login Again / Switch Account'),
+                style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryCrimson),
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  _api.logout();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const AuthScreen(role: 'CUSTOMER')),
+                    (route) => false,
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                icon: const Icon(Icons.logout_rounded, size: 16, color: Colors.red),
+                label: const Text('Sign Out', style: TextStyle(color: Colors.red)),
+                style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.red)),
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  _api.logout();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const RoleSelectorScreen()),
+                    (route) => false,
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +126,11 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                 const SnackBar(content: Text('No new alerts. Your bookings are on schedule!')),
               );
             },
+          ),
+          IconButton(
+            icon: const Icon(Icons.account_circle_outlined, color: AppTheme.primaryCrimson),
+            tooltip: 'Login Again / Account',
+            onPressed: _showAccountDialog,
           ),
         ],
       ),

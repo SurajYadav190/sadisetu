@@ -10,6 +10,9 @@ public class BookingRequest {
     private String venueAddress;
     private String customerNotes;
     private String promoCode;
+    private String selectedVarieties;
+    private Integer durationHours;
+    private Double customTotalAmount;
 
     public BookingRequest() {}
 
@@ -33,4 +36,13 @@ public class BookingRequest {
 
     public String getPromoCode() { return promoCode; }
     public void setPromoCode(String promoCode) { this.promoCode = promoCode; }
+
+    public String getSelectedVarieties() { return selectedVarieties; }
+    public void setSelectedVarieties(String selectedVarieties) { this.selectedVarieties = selectedVarieties; }
+
+    public Integer getDurationHours() { return durationHours; }
+    public void setDurationHours(Integer durationHours) { this.durationHours = durationHours; }
+
+    public Double getCustomTotalAmount() { return customTotalAmount; }
+    public void setCustomTotalAmount(Double customTotalAmount) { this.customTotalAmount = customTotalAmount; }
 }

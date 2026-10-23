@@ -15,10 +15,58 @@ class RoleSelectorScreen extends StatefulWidget {
 class _RoleSelectorScreenState extends State<RoleSelectorScreen> {
   void _openCustomerFlow() {
     if (ApiService.instance.isCustomerLoggedIn) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const CustomerMainNav()),
-      ).then((_) => setState(() {}));
+      showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.white,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+        builder: (ctx) => Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Customer Session Active', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppTheme.slateDark)),
+              const SizedBox(height: 6),
+              Text(
+                'Logged in as ${ApiService.instance.currentUser?.fullName ?? 'Rahul Sharma'} (+91 ${ApiService.instance.currentUser?.phone ?? '9876543210'})',
+                style: const TextStyle(fontSize: 13, color: AppTheme.slateMuted),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.arrow_forward_rounded, size: 16),
+                  label: const Text('Continue to Customer Home Page'),
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const CustomerMainNav()),
+                    ).then((_) => setState(() {}));
+                  },
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  icon: const Icon(Icons.login_rounded, size: 16, color: AppTheme.primaryCrimson),
+                  label: const Text('Login Again / Switch Customer', style: TextStyle(color: AppTheme.primaryCrimson, fontWeight: FontWeight.w700)),
+                  style: OutlinedButton.styleFrom(side: const BorderSide(color: AppTheme.primaryCrimson)),
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    ApiService.instance.logout();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AuthScreen(role: 'CUSTOMER')),
+                    ).then((_) => setState(() {}));
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
     } else {
       Navigator.push(
         context,
@@ -29,10 +77,59 @@ class _RoleSelectorScreenState extends State<RoleSelectorScreen> {
 
   void _openVendorFlow() {
     if (ApiService.instance.isVendorLoggedIn) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const VendorMainNav()),
-      ).then((_) => setState(() {}));
+      showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.white,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+        builder: (ctx) => Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Vendor Session Active', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppTheme.slateDark)),
+              const SizedBox(height: 6),
+              Text(
+                'Logged in as ${ApiService.instance.currentUser?.fullName ?? 'Vendor'} (+91 ${ApiService.instance.currentUser?.phone ?? '9811122233'})',
+                style: const TextStyle(fontSize: 13, color: AppTheme.slateMuted),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.arrow_forward_rounded, size: 16),
+                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFB45309)),
+                  label: const Text('Continue to Vendor Hub'),
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const VendorMainNav()),
+                    ).then((_) => setState(() {}));
+                  },
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  icon: const Icon(Icons.login_rounded, size: 16, color: Color(0xFFB45309)),
+                  label: const Text('Login Again / Switch Vendor', style: TextStyle(color: Color(0xFFB45309), fontWeight: FontWeight.w700)),
+                  style: OutlinedButton.styleFrom(side: const BorderSide(color: Color(0xFFB45309))),
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    ApiService.instance.logout();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AuthScreen(role: 'VENDOR')),
+                    ).then((_) => setState(() {}));
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
     } else {
       Navigator.push(
         context,
@@ -117,13 +214,20 @@ class _RoleSelectorScreenState extends State<RoleSelectorScreen> {
                     context,
                     title: 'Customer Experience',
                     subtitle: customerLoggedIn
-                        ? 'Logged in as ${currentUser?.fullName ?? 'Rahul'}. Tap to enter Customer Home Page.'
+                        ? 'Logged in as ${currentUser?.fullName ?? 'Rahul Sharma'}. Tap to open options or Login Again.'
                         : 'Sign in with phone number first to access verified vendors, packages & bookings.',
                     badge: customerLoggedIn ? 'Logged In ✓' : 'Login Required',
-                    actionLabel: customerLoggedIn ? 'Open Home Page' : 'Login First',
+                    actionLabel: customerLoggedIn ? 'Options' : 'Login First',
                     icon: Icons.favorite_rounded,
                     color: AppTheme.primaryCrimson,
                     onTap: _openCustomerFlow,
+                    onLoginAgain: () {
+                      ApiService.instance.logout();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const AuthScreen(role: 'CUSTOMER')),
+                      ).then((_) => setState(() {}));
+                    },
                     onLogout: customerLoggedIn
                         ? () {
                             setState(() {
@@ -139,13 +243,20 @@ class _RoleSelectorScreenState extends State<RoleSelectorScreen> {
                     context,
                     title: 'Vendor Partner Ecosystem',
                     subtitle: vendorLoggedIn
-                        ? 'Logged in as ${currentUser?.fullName ?? 'Vendor'}. Tap to enter Vendor Hub.'
+                        ? 'Logged in as ${currentUser?.fullName ?? 'Vendor'}. Tap to open options or Login Again.'
                         : 'Sign in with merchant phone number first to manage bookings, catalog & calendar.',
                     badge: vendorLoggedIn ? 'Verified Partner ✓' : 'Login Required',
-                    actionLabel: vendorLoggedIn ? 'Open Vendor Hub' : 'Login First',
+                    actionLabel: vendorLoggedIn ? 'Options' : 'Login First',
                     icon: Icons.storefront_rounded,
                     color: const Color(0xFFB45309),
                     onTap: _openVendorFlow,
+                    onLoginAgain: () {
+                      ApiService.instance.logout();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const AuthScreen(role: 'VENDOR')),
+                      ).then((_) => setState(() {}));
+                    },
                     onLogout: vendorLoggedIn
                         ? () {
                             setState(() {
@@ -157,7 +268,7 @@ class _RoleSelectorScreenState extends State<RoleSelectorScreen> {
 
                   const SizedBox(height: 36),
 
-                  // Direct Quick Sign In Buttons
+                  // Direct Quick Login Again Buttons
                   Wrap(
                     alignment: WrapAlignment.center,
                     crossAxisAlignment: WrapCrossAlignment.center,
@@ -166,8 +277,9 @@ class _RoleSelectorScreenState extends State<RoleSelectorScreen> {
                     children: [
                       OutlinedButton.icon(
                         icon: const Icon(Icons.login_rounded, size: 16),
-                        label: const Text('Customer Login'),
+                        label: const Text('Customer Login Again'),
                         onPressed: () {
+                          ApiService.instance.logout();
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -178,11 +290,12 @@ class _RoleSelectorScreenState extends State<RoleSelectorScreen> {
                       ),
                       ElevatedButton.icon(
                         icon: const Icon(Icons.store_rounded, size: 16),
-                        label: const Text('Vendor Login'),
+                        label: const Text('Vendor Login Again'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFB45309),
                         ),
                         onPressed: () {
+                          ApiService.instance.logout();
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -212,6 +325,7 @@ class _RoleSelectorScreenState extends State<RoleSelectorScreen> {
     required IconData icon,
     required Color color,
     required VoidCallback onTap,
+    VoidCallback? onLoginAgain,
     VoidCallback? onLogout,
   }) {
     return InkWell(
@@ -297,13 +411,26 @@ class _RoleSelectorScreenState extends State<RoleSelectorScreen> {
                 const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: Color(0xFFCBD5E1)),
               ],
             ),
-            if (onLogout != null) ...[
-              const SizedBox(height: 10),
-              const Divider(height: 1),
-              const SizedBox(height: 6),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
+            const SizedBox(height: 10),
+            const Divider(height: 1),
+            const SizedBox(height: 6),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (onLoginAgain != null) ...[
+                  TextButton.icon(
+                    onPressed: onLoginAgain,
+                    icon: Icon(Icons.login_rounded, size: 14, color: color),
+                    label: Text('Login Again', style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w700)),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                ],
+                if (onLogout != null) ...[
                   TextButton.icon(
                     onPressed: onLogout,
                     icon: const Icon(Icons.logout_rounded, size: 14, color: Colors.red),
@@ -315,8 +442,8 @@ class _RoleSelectorScreenState extends State<RoleSelectorScreen> {
                     ),
                   ),
                 ],
-              ),
-            ],
+              ],
+            ),
           ],
         ),
       ),

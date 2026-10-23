@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../config/theme.dart';
 import '../../services/api_service.dart';
+import '../common/auth_screen.dart';
+import '../common/role_selector_screen.dart';
+import 'customer_chat_screen.dart';
 import 'customer_home_screen.dart';
 import 'my_bookings_screen.dart';
-import 'customer_chat_screen.dart';
-import '../common/role_selector_screen.dart';
 
 class CustomerMainNav extends StatefulWidget {
   const CustomerMainNav({super.key});
@@ -24,7 +25,29 @@ class _CustomerMainNavState extends State<CustomerMainNav> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    if (!ApiService.instance.isCustomerLoggedIn) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const AuthScreen(role: 'CUSTOMER')),
+        );
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (!ApiService.instance.isCustomerLoggedIn) {
+      return const Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: CircularProgressIndicator(color: AppTheme.primaryCrimson),
+        ),
+      );
+    }
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
@@ -159,6 +182,20 @@ class CustomerAccountScreen extends StatelessWidget {
             trailing: Icon(Icons.arrow_forward_ios_rounded, size: 16),
           ),
           const SizedBox(height: 20),
+          ListTile(
+            leading: const Icon(Icons.login_rounded, color: AppTheme.primaryCrimson),
+            title: const Text('Login Again / Switch Account', style: TextStyle(fontWeight: FontWeight.w700, color: AppTheme.primaryCrimson)),
+            subtitle: const Text('Sign in with a different customer mobile number'),
+            trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
+            onTap: () {
+              ApiService.instance.logout();
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const AuthScreen(role: 'CUSTOMER')),
+                (route) => false,
+              );
+            },
+          ),
           ListTile(
             leading: const Icon(Icons.logout_rounded, color: Colors.red),
             title: const Text('Logout from Account', style: TextStyle(fontWeight: FontWeight.w700, color: Colors.red)),

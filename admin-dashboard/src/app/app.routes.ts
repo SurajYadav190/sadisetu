@@ -1,5 +1,8 @@
 import { Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
+import { AdminLoginComponent } from './pages/login/admin-login.component';
+import { adminAuthGuard } from './core/guards/admin-auth.guard';
+
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { UsersComponent } from './pages/users/users.component';
 import { VendorsComponent } from './pages/vendors/vendors.component';
@@ -13,8 +16,14 @@ import { AnalyticsComponent } from './pages/analytics/analytics.component';
 
 export const routes: Routes = [
   {
+    path: 'login',
+    component: AdminLoginComponent,
+    title: 'Shaadi Setu | Super Admin Login'
+  },
+  {
     path: '',
     component: LayoutComponent,
+    canActivate: [adminAuthGuard],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent, title: 'Shaadi Setu | 1. Dashboard' },
@@ -29,5 +38,5 @@ export const routes: Routes = [
       { path: 'analytics', component: AnalyticsComponent, title: 'Shaadi Setu | 10. Analytics & Reports' },
     ]
   },
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: 'login' }
 ];

@@ -19,20 +19,42 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<AuthResponse>> register(@RequestBody AuthRequest request) {
-        AuthResponse response = authService.register(request);
-        return ResponseEntity.ok(ApiResponse.ok("Registration successful", response));
+        try {
+            AuthResponse response = authService.register(request);
+            return ResponseEntity.ok(ApiResponse.ok("Registration successful", response));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+        }
     }
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthResponse>> login(@RequestBody AuthRequest request) {
-        AuthResponse response = authService.login(request);
-        return ResponseEntity.ok(ApiResponse.ok("Login successful", response));
+        try {
+            AuthResponse response = authService.login(request);
+            return ResponseEntity.ok(ApiResponse.ok("Login successful", response));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+        }
+    }
+
+    @PostMapping("/send-otp")
+    public ResponseEntity<ApiResponse<java.util.Map<String, String>>> sendOtp(@RequestBody AuthRequest request) {
+        try {
+            java.util.Map<String, String> data = authService.generateAndSendOtp(request.getPhone(), request.getRole());
+            return ResponseEntity.ok(ApiResponse.ok(data.get("message"), data));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+        }
     }
 
     @PostMapping("/otp-verify")
     public ResponseEntity<ApiResponse<AuthResponse>> verifyOtp(@RequestBody AuthRequest request) {
-        AuthResponse response = authService.verifyOtp(request.getPhone(), request.getOtp(), request.getRole());
-        return ResponseEntity.ok(ApiResponse.ok("OTP verified successfully", response));
+        try {
+            AuthResponse response = authService.verifyOtp(request.getPhone(), request.getOtp(), request.getRole());
+            return ResponseEntity.ok(ApiResponse.ok("OTP verified successfully", response));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+        }
     }
 
     @GetMapping("/me")

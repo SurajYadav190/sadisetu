@@ -105,7 +105,12 @@ public class CustomerService {
             }
         }
 
-        double finalAmount = Math.max(0.0, baseAmount - discount);
+        double finalAmount;
+        if (request.getCustomTotalAmount() != null && request.getCustomTotalAmount() > 0) {
+            finalAmount = request.getCustomTotalAmount();
+        } else {
+            finalAmount = Math.max(0.0, baseAmount - discount);
+        }
         double platformCommission = (finalAmount * (vendor.getCommissionRate() != null ? vendor.getCommissionRate() : 10.0)) / 100.0;
         double vendorPayout = finalAmount - platformCommission;
 
@@ -118,6 +123,8 @@ public class CustomerService {
         booking.setTimeSlot(request.getTimeSlot() != null ? request.getTimeSlot() : "Full Day");
         booking.setVenueAddress(request.getVenueAddress());
         booking.setStatus("PENDING");
+        booking.setSelectedVarieties(request.getSelectedVarieties());
+        booking.setDurationHours(request.getDurationHours() != null ? request.getDurationHours() : (pkg.getDurationHours() != null ? pkg.getDurationHours() : 8));
         booking.setTotalAmount(finalAmount);
         booking.setCommissionAmount(platformCommission);
         booking.setPayoutAmount(vendorPayout);

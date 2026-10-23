@@ -41,7 +41,7 @@ class LiveEventTrackerScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.15),
+                        color: Colors.white.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: const Row(
@@ -64,6 +64,61 @@ class LiveEventTrackerScreen extends StatelessWidget {
                   'Venue: ${booking.venueAddress}',
                   style: const TextStyle(color: Colors.white70, fontSize: 13),
                 ),
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        '⏱️ ${booking.totalDurationHours} Hours Total Coverage',
+                        style: const TextStyle(color: AppTheme.weddingGold, fontSize: 11.5, fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        '₹${booking.totalAmount.toInt()} in Escrow',
+                        style: const TextStyle(color: Colors.white, fontSize: 11.5, fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ],
+                ),
+                if (booking.selectedVarieties.isNotEmpty) ...[
+                  const SizedBox(height: 10),
+                  const Divider(color: Colors.white24, height: 1),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Confirmed Equipment & Varieties:',
+                    style: TextStyle(color: AppTheme.weddingGold, fontSize: 11, fontWeight: FontWeight.w700),
+                  ),
+                  const SizedBox(height: 4),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 4,
+                    children: booking.selectedVarieties
+                        .map((v) => Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                v.contains('Drone') ? '🛸 $v' : '✓ $v',
+                                style: const TextStyle(color: Colors.white, fontSize: 10.5, fontWeight: FontWeight.w600),
+                              ),
+                            ))
+                        .toList(),
+                  ),
+                ],
               ],
             ),
           ),

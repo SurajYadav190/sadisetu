@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AdminAuthService } from '../core/services/admin-auth.service';
 
 @Component({
   selector: 'app-layout',
@@ -95,10 +96,20 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
                 SA
               </div>
               <div>
-                <p style="font-size: 13.5px; font-weight: 700; line-height: 1.2;">Admin Master</p>
-                <p style="font-size: 11.5px; color: var(--text-muted);">admin&#64;shadisetu.com</p>
+                <p style="font-size: 13.5px; font-weight: 700; line-height: 1.2;">{{ auth.currentAdmin()?.fullName || 'Super Admin' }}</p>
+                <p style="font-size: 11.5px; color: var(--text-muted);">{{ auth.currentAdmin()?.email || 'admin@shadisetu.com' }}</p>
               </div>
             </div>
+
+            <!-- Sign Out Button -->
+            <button class="btn-logout" (click)="handleLogout()" title="Terminate Admin Session">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 15px; height: 15px;">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+              <span>Sign Out</span>
+            </button>
           </div>
         </header>
 
@@ -108,6 +119,36 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
         </main>
       </div>
     </div>
-  `
+  `,
+  styles: [`
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      font-size: 12.5px;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-logout:hover {
+      background: #fee2e2;
+      color: #7f1d1d;
+      transform: translateY(-1px);
+    }
+  `]
 })
-export class LayoutComponent {}
+export class LayoutComponent {
+  public auth = inject(AdminAuthService);
+
+  handleLogout(): void {
+    if (confirm('Are you sure you want to log out of the Admin Console?')) {
+      this.auth.logout();
+    }
+  }
+}

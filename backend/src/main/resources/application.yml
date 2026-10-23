@@ -7,7 +7,7 @@ spring:
   application:
     name: shadisetu-backend
   profiles:
-    active: dev
+    active: mysql
 
   jpa:
     open-in-view: false
@@ -22,6 +22,13 @@ app:
   jwt:
     secret: 9b78c91d4e0e561a3f6289b7d84a1e945c2f0b784e1b8c6d3a9e2f5b8a1c7d0e
     expiration-ms: 86400000 # 24 hours
+  sms:
+    provider: ${SMS_PROVIDER:mock}
+    api-key: ${FAST2SMS_API_KEY:mock_key}
+    twilio:
+      account-sid: ${TWILIO_ACCOUNT_SID:AC_MOCK_ACCOUNT_SID}
+      auth-token: ${TWILIO_AUTH_TOKEN:mock_auth_token}
+      from-number: ${TWILIO_FROM_NUMBER:+15005550006}
   cors:
     allowed-origins:
       - "http://localhost:4200"

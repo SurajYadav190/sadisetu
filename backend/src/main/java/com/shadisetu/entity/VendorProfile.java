@@ -43,6 +43,7 @@ public class VendorProfile {
 
     // Operational Metrics
     private boolean isOnline = true;
+    private Double startingPrice = 15000.0;
     private Double rating = 4.8;
     private Integer reviewCount = 0;
     private Double commissionRate = 10.0; // default 10%
@@ -100,6 +101,9 @@ public class VendorProfile {
 
     public boolean isOnline() { return isOnline; }
     public void setOnline(boolean online) { isOnline = online; }
+
+    public Double getStartingPrice() { return startingPrice; }
+    public void setStartingPrice(Double startingPrice) { this.startingPrice = startingPrice; }
 
     public Double getRating() { return rating; }
     public void setRating(Double rating) { this.rating = rating; }

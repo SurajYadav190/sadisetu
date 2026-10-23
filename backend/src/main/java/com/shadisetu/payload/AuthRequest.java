@@ -8,6 +8,15 @@ public class AuthRequest {
     private String otp;
     private String role; // CUSTOMER, VENDOR
 
+    // Vendor & Customer registration details
+    private String businessName;
+    private String categoryName;
+    private Long categoryId;
+    private String city;
+    private String address;
+    private String bio;
+    private Double startingPrice;
+
     public AuthRequest() {}
 
     public String getFullName() { return fullName; }
@@ -27,4 +36,25 @@ public class AuthRequest {
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
+    public String getBusinessName() { return businessName; }
+    public void setBusinessName(String businessName) { this.businessName = businessName; }
+
+    public String getCategoryName() { return categoryName; }
+    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
+
+    public Long getCategoryId() { return categoryId; }
+    public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
+
+    public String getCity() { return city; }
+    public void setCity(String city) { this.city = city; }
+
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+
+    public String getBio() { return bio; }
+    public void setBio(String bio) { this.bio = bio; }
+
+    public Double getStartingPrice() { return startingPrice; }
+    public void setStartingPrice(Double startingPrice) { this.startingPrice = startingPrice; }
 }

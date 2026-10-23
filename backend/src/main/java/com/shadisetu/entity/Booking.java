@@ -50,6 +50,11 @@ public class Booking {
     @Column(length = 1000)
     private String customerNotes;
 
+    @Column(length = 2000)
+    private String selectedVarieties;
+
+    private Integer durationHours;
+
     @Column(length = 1000)
     private String vendorNotes;
 
@@ -102,6 +107,12 @@ public class Booking {
 
     public String getCustomerNotes() { return customerNotes; }
     public void setCustomerNotes(String customerNotes) { this.customerNotes = customerNotes; }
+
+    public String getSelectedVarieties() { return selectedVarieties; }
+    public void setSelectedVarieties(String selectedVarieties) { this.selectedVarieties = selectedVarieties; }
+
+    public Integer getDurationHours() { return durationHours; }
+    public void setDurationHours(Integer durationHours) { this.durationHours = durationHours; }
 
     public String getVendorNotes() { return vendorNotes; }
     public void setVendorNotes(String vendorNotes) { this.vendorNotes = vendorNotes; }

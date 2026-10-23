@@ -93,6 +93,41 @@ class _VendorOrdersScreenState extends State<VendorOrdersScreen> {
                   '📍 Venue: ${b.venueAddress}',
                   style: const TextStyle(fontSize: 13, color: AppTheme.slateMuted),
                 ),
+                if (b.selectedVarieties.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 4,
+                    children: [
+                      ...b.selectedVarieties.map((v) => Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: AppTheme.lightGold,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              v.contains('Drone') ? '🛸 $v' : '✓ $v',
+                              style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF78350F),
+                              ),
+                            ),
+                          )),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF1F5F9),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          '⏱️ ${b.totalDurationHours}h coverage',
+                          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppTheme.slateDark),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
                 const SizedBox(height: 12),
                 const Divider(),
                 const SizedBox(height: 8),
