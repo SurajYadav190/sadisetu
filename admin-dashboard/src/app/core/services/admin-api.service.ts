@@ -16,7 +16,9 @@ import {
   providedIn: 'root'
 })
 export class AdminApiService {
-  private baseUrl = 'http://localhost:8080/api/admin';
+  private baseUrl = (typeof window !== 'undefined' && window.location.hostname !== 'localhost')
+    ? 'https://sadisetu.onrender.com/api/admin'
+    : 'http://localhost:8080/api/admin';
 
   // State signals for modern Angular 21 reactive architecture
   public statsSignal = signal<DashboardStats | null>(null);

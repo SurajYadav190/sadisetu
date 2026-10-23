@@ -13,7 +13,9 @@ const ADMIN_STORAGE_KEY = 'shaadi_setu_admin_session';
 export class AdminAuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private authUrl = 'http://localhost:8080/api/auth';
+  private authUrl = (typeof window !== 'undefined' && window.location.hostname !== 'localhost')
+    ? 'https://sadisetu.onrender.com/api/auth'
+    : 'http://localhost:8080/api/auth';
 
   public currentAdmin = signal<User | null>(this.loadStoredAdmin());
   public isAuthenticated = computed(() => {
