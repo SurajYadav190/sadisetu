@@ -3,9 +3,9 @@ spring:
     activate:
       on-profile: mysql
   datasource:
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DB:shadisetu_db}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
-    username: ${MYSQL_USER:root}
-    password: ${MYSQL_PASSWORD:1234}
+    url: ${SPRING_DATASOURCE_URL:${DATABASE_URL:jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DB:shadisetu_db}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true}}
+    username: ${MYSQL_USER:${SPRING_DATASOURCE_USERNAME:root}}
+    password: ${MYSQL_PASSWORD:${SPRING_DATASOURCE_PASSWORD:1234}}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
